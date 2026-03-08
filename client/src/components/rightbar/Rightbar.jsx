@@ -12,26 +12,10 @@ function Rightbar({user}) {
   const {user : currentUser ,dispatch} = useContext(AuthContext);
   const [followed , setFollowed] = useState(currentUser.following.includes(user?._id));
   
-  // const [followed , setFollowed] = useState([]);
-  // useEffect (()=>{
-  //   setFollowed(currentUser.following.includes(user?.id))
-  // },[currentUser.following,user?.id])
-  // useEffect (()=>{
-  //   const getFriends = async()=>{
-  //     try{
-  //       const friendList = await axios.get("http://localhost:8800/api/users/friends/"+user._id);
-  //       setFriends(friendList.data);
-  //     }
-  //     catch(err){
-  //       console.log(err);
-  //     }
-  //   };
-  //   getFriends();
-  // },[user]);
   useEffect(() => {
     const getFriends = async () => {
       try {
-        const friendList = await axios.get("http://localhost:8800/api/users/friends/" + user._id);
+        const friendList = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/friends/${user._id}`);
         setFriends(friendList.data);
       } catch (err) {
         console.log(err);
@@ -40,25 +24,21 @@ function Rightbar({user}) {
     getFriends();
   }, [user]);
   
-
   const handleClick = async()=>{
-   
     try{
       if(followed){
-        await axios.put("http://localhost:8800/api/users/"+user._id+ "/unfollow" , {userId : currentUser._id})
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/users/${user._id}/unfollow`, {userId : currentUser._id})
         dispatch({type:"UNFOLLOW" , payload : user._id});
       }
       else{
-        await axios.put("http://localhost:8800/api/users/"+user._id+ "/follow", {userId : currentUser._id})
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/users/${user._id}/follow`, {userId : currentUser._id})
         dispatch({type:"FOLLOW" , payload : user._id});
       }
     }
     catch(err){
       console.log(err)
     }
-    
     setFollowed(!followed);
-    // console.log(followed);
   }
 
   const HomeRightBar = ()=>{
@@ -93,15 +73,11 @@ function Rightbar({user}) {
     <div className="rightbarInfo">
       <div className="rightbarInfoItem">
         <span className="rightbarInfoKey">City:</span>
-        <span className="rightbarInfoValue">
-          {user.city}
-        </span>
+        <span className="rightbarInfoValue">{user.city}</span>
       </div>
       <div className="rightbarInfoItem">
         <span className="rightbarInfoKey">From:</span>
-        <span className="rightbarInfoValue">
-         {user.from}
-        </span>
+        <span className="rightbarInfoValue">{user.from}</span>
       </div>
       <div className="rightbarInfoItem">
         <span className="rightbarInfoKey">Relationship:</span>
@@ -120,7 +96,6 @@ function Rightbar({user}) {
           </div>
           </Link>
         ))}
-      
       </div>
     </>
     )

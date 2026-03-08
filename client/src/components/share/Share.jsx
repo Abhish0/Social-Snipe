@@ -10,35 +10,32 @@ function Share() {
     const desc = useRef();
     const [file,setFile] = useState(null);
     const submitHandler=async(e)=>{
-        e.preventDefault()
-        const newPost = {
-            userId : user._id,
-            desc: desc.current.value
-        }
-        if(file){
-            const data = new FormData();
-            const fileName = Date.now()+file.name;
-            data.append("file",file,fileName); 
-            newPost.img =fileName;
-            try{
-                await axios.post("http://localhost:8800/api/upload",data);
-            }
-            catch(err){
-                console.log(err)
-            }
-
-        }
-        try{
-            await axios.post("http://localhost:8800/api/posts",newPost)
-            window.location.reload();
-        }
-        
-        catch(err){
-
-        }
-        console.log(user.username)
+    e.preventDefault()
+    const newPost = {
+        userId : user._id,
+        desc: desc.current.value
     }
+    if(file){
+        const data = new FormData();
+        const fileName = Date.now()+file.name;
+        data.append("file",file,fileName); 
+        newPost.img =fileName;
+        try{
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/upload`,data);
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+    try{
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/posts`,newPost)
+        window.location.reload();
+    }
+    catch(err){
 
+    }
+    console.log(user.username)
+}
   return ( 
     <div className="share">
         <div className="shareWrapper">

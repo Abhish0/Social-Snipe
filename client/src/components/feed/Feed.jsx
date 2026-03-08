@@ -9,7 +9,7 @@ function Feed({username}) {
   const {user} = useContext(AuthContext);
   useEffect(()=>{
     const fetchPosts = async()=>{
-      const res = username ? await axios.get("http://localhost:8800/api/posts/profile/"+username) : await axios.get("http://localhost:8800/api/posts/timeline/"+user._id)
+      const res = username ? await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/profile/${username}`) : await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/timeline/${user._id}`)
       setPosts(res.data.sort((p1,p2)=>{
           return new Date(p2.createdAt) - new Date(p1.createdAt);
       }))
